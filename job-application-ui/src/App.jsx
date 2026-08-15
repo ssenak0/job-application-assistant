@@ -229,6 +229,26 @@ function App() {
                   </p>
                 </div>
               )}
+              
+              {result.cover_letter_text && (
+                <div className="message-preview" style={{marginTop: '20px', padding: '15px', backgroundColor: '#f8fafc', borderRadius: '8px', border: '1px solid #cbd5e1'}}>
+                  <h4 style={{marginTop: 0, color: '#334155', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <span>📝 İlana Özel Ön Yazı (Cover Letter)</span>
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(result.cover_letter_text);
+                        alert("Ön yazı kopyalandı!");
+                      }}
+                      style={{padding: '4px 10px', fontSize: '0.8rem', background: '#64748b', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'}}
+                    >
+                      Kopyala
+                    </button>
+                  </h4>
+                  <p style={{margin: '10px 0 0 0', fontSize: '0.95rem', color: '#475569', whiteSpace: 'pre-wrap'}}>
+                    {result.cover_letter_text}
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>

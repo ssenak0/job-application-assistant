@@ -83,11 +83,12 @@ def tailor_cv(req: JobRequest):
         pdf_path = generate_resume_pdf(candidate, resume, parsed.company, parsed.title)
         
         cover_letter_url = None
+        cl_text_out = None
         if req.generate_cover_letter:
-            cl_text = generate_cover_letter(candidate, parsed, resume)
+            cl_text_out = generate_cover_letter(candidate, parsed, resume)
             cl_path = Path("outputs/cover_letters") / f"{job_id}.txt"
             cl_path.parent.mkdir(parents=True, exist_ok=True)
-            cl_path.write_text(cl_text, encoding="utf-8")
+            cl_path.write_text(cl_text_out, encoding="utf-8")
             cover_letter_url = f"/api/download_cl/{cl_path.name}"
             
         recruiter_msg = None
@@ -100,6 +101,7 @@ def tailor_cv(req: JobRequest):
             "missing_skills": score.missing_skills,
             "pdf_url": f"/api/download/{pdf_path.name}",
             "cover_letter_url": cover_letter_url,
+            "cover_letter_text": cl_text_out,
             "recruiter_message": recruiter_msg
         }
     except Exception as e:
