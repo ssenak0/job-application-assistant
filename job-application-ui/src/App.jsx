@@ -4,6 +4,7 @@ import './App.css';
 function App() {
   const [jobDescription, setJobDescription] = useState('');
   const [generateCoverLetter, setGenerateCoverLetter] = useState(false);
+  const [generateRecruiterMessage, setGenerateRecruiterMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
@@ -62,7 +63,8 @@ function App() {
         },
         body: JSON.stringify({ 
           description: jobDescription,
-          generate_cover_letter: generateCoverLetter
+          generate_cover_letter: generateCoverLetter,
+          generate_recruiter_message: generateRecruiterMessage
         }),
       });
 
@@ -123,6 +125,14 @@ function App() {
                 onChange={(e) => setGenerateCoverLetter(e.target.checked)}
               />
               İlana Özel Ön Yazı (Cover Letter) Üret
+            </label>
+            <label className="checkbox-container" style={{marginLeft: '15px'}}>
+              <input 
+                type="checkbox" 
+                checked={generateRecruiterMessage}
+                onChange={(e) => setGenerateRecruiterMessage(e.target.checked)}
+              />
+              LinkedIn İK Mesajı Üret
             </label>
           </div>
           
@@ -199,6 +209,26 @@ function App() {
                   </a>
                 )}
               </div>
+              
+              {result.recruiter_message && (
+                <div className="message-preview" style={{marginTop: '20px', padding: '15px', backgroundColor: '#f0f9ff', borderRadius: '8px', border: '1px solid #bae6fd'}}>
+                  <h4 style={{marginTop: 0, color: '#0369a1', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <span>💬 LinkedIn İK Mesajı</span>
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(result.recruiter_message);
+                        alert("Mesaj kopyalandı!");
+                      }}
+                      style={{padding: '4px 10px', fontSize: '0.8rem', background: '#0ea5e9', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'}}
+                    >
+                      Kopyala
+                    </button>
+                  </h4>
+                  <p style={{margin: '10px 0 0 0', fontSize: '0.95rem', color: '#334155', whiteSpace: 'pre-wrap'}}>
+                    {result.recruiter_message}
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>

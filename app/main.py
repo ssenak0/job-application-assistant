@@ -12,7 +12,7 @@ from app.services.match_scorer import score_job
 from app.services.profile import validate_profile
 from app.services.resume_tailor import tailor_resume
 from app.services.pdf_generator import generate_resume_pdf
-from app.services.cover_letter import generate_cover_letter
+from app.services.cover_letter import generate_cover_letter, generate_recruiter_message
 
 app = FastAPI(title="Job Application Assistant")
 
@@ -56,6 +56,7 @@ async def upload_cv(file: UploadFile = File(...)):
 class JobRequest(BaseModel):
     description: str
     generate_cover_letter: bool = False
+    generate_recruiter_message: bool = False
 
 @app.post("/api/tailor")
 def tailor_cv(req: JobRequest):
@@ -89,12 +90,17 @@ def tailor_cv(req: JobRequest):
             cl_path.write_text(cl_text, encoding="utf-8")
             cover_letter_url = f"/api/download_cl/{cl_path.name}"
             
+        recruiter_msg = None
+        if req.generate_recruiter_message:
+            recruiter_msg = generate_recruiter_message(candidate, parsed)
+            
         return {
             "score": score.total,
             "matched_skills": score.matched_skills,
             "missing_skills": score.missing_skills,
             "pdf_url": f"/api/download/{pdf_path.name}",
-            "cover_letter_url": cover_letter_url
+            "cover_letter_url": cover_letter_url,
+            "recruiter_message": recruiter_msg
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
