@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ full_name }} CV</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            margin: 0;
+            size: A4;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 210mm;
+            height: 297mm;
+            display: flex;
+            color: #222;
+            line-height: 1.35;
+            box-sizing: border-box;
+            background: white;
+            font-size: 8pt;
+            overflow: hidden;
+        }
+        /* Layout */
+        .left-bar {
+            width: 33%;
+            background-color: #f8fafc;
+            padding: 25px 20px;
+            box-sizing: border-box;
+            border-right: 1px solid #e2e8f0;
+        }
+        .right-bar {
+            width: 67%;
+            background-color: #ffffff;
+            padding: 25px 25px;
+            box-sizing: border-box;
+        }
+        
+        /* Typography */
+        h1 {
+            font-size: 20pt;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+            line-height: 1.1;
+            color: #0f172a; 
+            text-transform: uppercase;
+            text-align: center;
+        }
+        h2 {
+            font-size: 9.5pt;
+            font-weight: 600;
+            color: #3b82f6; 
+            margin: 0 0 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        .section-title-left, .section-title-right {
+            font-size: 11pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            color: #0f172a;
+        }
+        .section-title-left {
+            border-bottom: 2px solid #cbd5e1;
+            padding-bottom: 2px;
+            margin-top: 18px;
+        }
+        .section-title-right {
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 2px;
+            margin-top: 0px;
+        }
+        .right-bar > .section-title-right:not(:first-child) {
+            margin-top: 18px;
+        }
+
+        /* Lists and Text */
+        p { margin: 0 0 8px 0; text-align: justify; }
+        a { color: #2563eb; text-decoration: none; }
+        
+        /* Left Column Specifics */
+        .contact-item { margin-bottom: 6px; font-size: 8.5pt; }
+        .contact-item strong { display: block; color: #0f172a; font-size: 8pt; margin-bottom: 1px; text-transform: uppercase;}
+        
+        .skill-group { margin-bottom: 10px; }
+        .skill-group strong { display: block; margin-bottom: 1px; color: #0f172a; font-size: 8.5pt; text-transform: uppercase;}
+        .skill-group div { font-size: 8.5pt; color: #444; }
+        
+        .edu-item, .cert-item { margin-bottom: 10px; font-size: 8.5pt; }
+        .edu-item strong, .cert-item strong { display: block; color: #0f172a; font-size: 8.5pt; margin-bottom: 1px; }
+        .date-small { color: #64748b; font-size: 8pt; }
+
+        /* Right Column Specifics */
+        .exp-item, .proj-item { margin-bottom: 12px; }
+        .item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1px; }
+        .item-title { font-weight: 700; font-size: 10pt; color: #0f172a; }
+        .item-date { font-size: 9pt; font-weight: 600; color: #3b82f6; white-space: nowrap; }
+        .item-subtitle { font-style: italic; font-weight: 500; font-size: 9pt; color: #475569; margin-bottom: 4px; }
+        
+        /* Utility */
+        .bullet-list { margin: 0; padding-left: 15px; text-align: justify; }
+        .bullet-list li { margin-bottom: 2px; font-size: 9pt; color: #222; }
+    </style>
+</head>
+<body>
+    <!-- LEFT COLUMN -->
+    <div class="left-bar">
+        
+        {% if profile_pic %}
+        <div style="text-align: center; margin-bottom: 12px;">
+            <img src="{{ profile_pic }}" alt="{{ full_name }}" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        </div>
+        {% endif %}
+
+        <h1>{{ full_name | replace(" ", "<br>") | safe }}</h1>
+        <h2>BİLGİSAYAR MÜHENDİSİ</h2>
+
+        <div class="section-title-left">İLETİŞİM</div>
+        <div class="contact-item">
+            <strong>Konum</strong>
+            {{ location }}
+        </div>
+        <div class="contact-item">
+            <strong>E-Posta</strong>
+            {{ email }}
+        </div>
+        <div class="contact-item">
+            <strong>Telefon</strong>
+            {{ phone }}
+        </div>
+        {% if identity.linkedin %}
+        <div class="contact-item">
+            <strong>LinkedIn</strong>
+            <a href="{{ identity.linkedin }}">{{ identity.linkedin | replace("https://", "") }}</a>
+        </div>
+        {% endif %}
+        {% if identity.github %}
+        <div class="contact-item">
+            <strong>GitHub</strong>
+            <a href="{{ identity.github }}">{{ identity.github | replace("https://", "") }}</a>
+        </div>
+        {% endif %}
+
+        <div class="section-title-left">ÖNE ÇIKAN YETENEKLER</div>
+        
+        {% set prog_dilleri = [] %}
+        {% set yapay_zeka = [] %}
+        {% set backend = [] %}
+        {% set araclar = [] %}
+
+        {% for skill in skills %}
+            {% if skill.name in ['Python', 'C++', 'Java', 'Dart (Flutter)', 'Swift'] %}
+                {% set _ = prog_dilleri.append(skill.name) %}
+            {% elif skill.name in ['OpenCV', 'YOLOv8', 'Derin Öğrenme', 'LLM (Gemini API)', 'Computer Vision', 'CoreML'] %}
+                {% set _ = yapay_zeka.append(skill.name) %}
+            {% elif skill.name in ['Spring Boot', 'REST API', 'Clean Architecture', 'PostgreSQL'] %}
+                {% set _ = backend.append(skill.name) %}
+            {% else %}
+                {% set _ = araclar.append(skill.name) %}
+            {% endif %}
+        {% endfor %}
+
+        {% if prog_dilleri %}
+        <div class="skill-group">
+            <strong>Programlama Dilleri</strong>
+            <div>{{ prog_dilleri | join(', ') }}</div>
+        </div>
+        {% endif %}
+        
+        {% if yapay_zeka %}
+        <div class="skill-group">
+            <strong>Yapay Zeka (CV & ML)</strong>
+            <div>{{ yapay_zeka | join(', ') }}</div>
+        </div>
+        {% endif %}
+
+        {% if backend %}
+        <div class="skill-group">
+            <strong>Backend & Mimari</strong>
+            <div>{{ backend | join(', ') }}</div>
+        </div>
+        {% endif %}
+
+        {% if araclar %}
+        <div class="skill-group">
+            <strong>Araçlar & DevOps</strong>
+            <div>{{ araclar | join(', ') }}</div>
+        </div>
+        {% endif %}
+        
+        <div class="skill-group">
+            <strong>Yabancı Dil</strong>
+            <div>İngilizce (Intermediate / B1)</div>
+        </div>
+
+        <div class="section-title-left">EĞİTİM</div>
+        {% for edu in education %}
+        <div class="edu-item">
+            <strong>{{ edu.school }}</strong>
+            <div>{{ edu.degree }}</div>
+            {% for detail in edu.details %}
+            <div>{{ detail }}</div>
+            {% endfor %}
+            <div class="date-small">{{ edu.start_date }} – {{ edu.end_date }}</div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-bar">
+        
+        <div class="section-title-right">PROFESYONEL ÖZET</div>
+        <p style="font-size: 9pt;">
+            {{ summary }}
+        </p>
+
+        {% if experience %}
+        <div class="section-title-right">İŞ DENEYİMİ</div>
+        {% for exp in experience %}
+        <div class="exp-item">
+            <div class="item-header">
+                <span class="item-title">{{ exp.title }}</span>
+                <span class="item-date">{{ exp.start_date }} - {{ exp.end_date }}</span>
+            </div>
+            <div class="item-subtitle">{{ exp.company }}</div>
+            <ul class="bullet-list">
+                {% for bullet in exp.bullets %}
+                <li>{{ bullet }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if projects %}
+        <div class="section-title-right">ÖNEMLİ PROJELER</div>
+        {% for proj in projects %}
+        <div class="proj-item">
+            <div class="item-header">
+                <span class="item-title">{{ proj.name }}</span>
+            </div>
+            <ul class="bullet-list">
+                {% for bullet in proj.bullets %}
+                <li>{{ bullet.text }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+        {% endif %}
+        
+    </div>
+</body>
+</html>
