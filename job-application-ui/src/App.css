@@ -53,7 +53,7 @@ body {
   flex: 1;
 }
 
-.left-panel, .right-panel {
+.left-panel, .center-panel, .right-panel {
   background: var(--panel-bg);
   border-radius: 12px;
   padding: 1.5rem;
@@ -66,8 +66,12 @@ body {
   flex: 1;
 }
 
+.center-panel {
+  flex: 1.2;
+}
+
 .right-panel {
-  flex: 1.5;
+  flex: 1;
 }
 
 h2 {
@@ -254,7 +258,7 @@ textarea:focus {
     flex-direction: column;
   }
   
-  .left-panel, .right-panel {
+  .left-panel, .center-panel, .right-panel {
     width: 100%;
   }
 }

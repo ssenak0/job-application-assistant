@@ -147,7 +147,7 @@ function App() {
           </button>
         </div>
 
-        <div className="right-panel">
+        <div className="center-panel">
           <h2>📊 Analiz ve Sonuç</h2>
           
           {!result && !isLoading && (
@@ -196,22 +196,32 @@ function App() {
                 >
                   📥 CV İndir (PDF)
                 </a>
-                
-                {result.cover_letter_url && (
-                  <a 
-                    href={`http://127.0.0.1:8000${result.cover_letter_url}`} 
-                    download 
-                    className="download-btn cover-letter-btn"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    📝 Ön Yazıyı İndir (TXT)
-                  </a>
-                )}
               </div>
-              
+            </div>
+          )}
+        </div>
+
+        <div className="right-panel">
+          <h2>✉️ Başvuru Mesajları</h2>
+          
+          {!result && !isLoading && (
+            <div className="empty-state">
+              <span className="icon">💬</span>
+              <p>Üretilen ön yazı ve mesajlar burada görünecek.</p>
+            </div>
+          )}
+
+          {isLoading && (
+            <div className="loading-state">
+              <div className="spinner"></div>
+              <p>Mesajlar hazırlanıyor...</p>
+            </div>
+          )}
+
+          {result && (
+            <div className="messages-container">
               {result.recruiter_message && (
-                <div className="message-preview" style={{marginTop: '20px', padding: '15px', backgroundColor: '#f0f9ff', borderRadius: '8px', border: '1px solid #bae6fd'}}>
+                <div className="message-preview" style={{padding: '15px', backgroundColor: '#f0f9ff', borderRadius: '8px', border: '1px solid #bae6fd', marginBottom: '20px'}}>
                   <h4 style={{marginTop: 0, color: '#0369a1', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                     <span>💬 LinkedIn İK Mesajı</span>
                     <button 
@@ -231,20 +241,29 @@ function App() {
               )}
               
               {result.cover_letter_text && (
-                <div className="message-preview" style={{marginTop: '20px', padding: '15px', backgroundColor: '#f8fafc', borderRadius: '8px', border: '1px solid #cbd5e1'}}>
-                  <h4 style={{marginTop: 0, color: '#334155', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                <div className="message-preview" style={{padding: '15px', backgroundColor: '#f8fafc', borderRadius: '8px', border: '1px solid #cbd5e1', display: 'flex', flexDirection: 'column', flex: 1}}>
+                  <h4 style={{marginTop: 0, color: '#334155', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>
                     <span>📝 İlana Özel Ön Yazı (Cover Letter)</span>
-                    <button 
-                      onClick={() => {
-                        navigator.clipboard.writeText(result.cover_letter_text);
-                        alert("Ön yazı kopyalandı!");
-                      }}
-                      style={{padding: '4px 10px', fontSize: '0.8rem', background: '#64748b', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'}}
-                    >
-                      Kopyala
-                    </button>
+                    <div style={{display: 'flex', gap: '8px'}}>
+                      <button 
+                        onClick={() => {
+                          navigator.clipboard.writeText(result.cover_letter_text);
+                          alert("Ön yazı kopyalandı!");
+                        }}
+                        style={{padding: '4px 10px', fontSize: '0.8rem', background: '#64748b', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'}}
+                      >
+                        Kopyala
+                      </button>
+                      <a 
+                        href={`http://127.0.0.1:8000${result.cover_letter_url}`} 
+                        download 
+                        style={{padding: '4px 10px', fontSize: '0.8rem', background: '#334155', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', textDecoration: 'none'}}
+                      >
+                        İndir
+                      </a>
+                    </div>
                   </h4>
-                  <p style={{margin: '10px 0 0 0', fontSize: '0.95rem', color: '#475569', whiteSpace: 'pre-wrap'}}>
+                  <p style={{margin: 0, fontSize: '0.95rem', color: '#475569', whiteSpace: 'pre-wrap', flex: 1, overflowY: 'auto'}}>
                     {result.cover_letter_text}
                   </p>
                 </div>
