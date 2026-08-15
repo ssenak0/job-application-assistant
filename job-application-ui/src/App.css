@@ -23,9 +23,9 @@ body {
 }
 
 .app-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  margin: 0;
+  padding: 1rem;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -67,7 +67,7 @@ body {
 }
 
 .center-panel {
-  flex: 1.2;
+  flex: 2.2;
 }
 
 .right-panel {
